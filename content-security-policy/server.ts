@@ -1,6 +1,6 @@
-import nodeHttp = require("node:http");
+import { createServer } from "node:http";
 
-const server = nodeHttp.createServer((req, res) => {
+const server = createServer((req, res) => {
   res.setHeader("Content-Type", "text/html; charset=utf-8");
   res.setHeader(
     "Content-Security-Policy",
