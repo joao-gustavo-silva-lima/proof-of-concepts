@@ -3,15 +3,19 @@ import cors, { type CorsOptions, type CorsOptionsDelegate } from "cors";
 
 const app = express();
 
-const routesWhiteList = new Map([
-  ["/api/produtos", "https://loja-parceira.com"],
+const originsWhiteList = new Map([
+  ["/api/produtos", /^https\:\/\/(?:.+\.)*loja-parceira\.com$/],
 ]);
+const credentialedRoutes = new Set(["/api/produtos"]);
 
 const corsOptionsDelegate: CorsOptionsDelegate = (req, callback) => {
   const currentPath = (req as Request).path;
+  const isCredentialedRoute = credentialedRoutes.has(currentPath);
 
   var corsOptions: CorsOptions = {
-    origin: routesWhiteList.get(currentPath) || "*",
+    credentials: isCredentialedRoute,
+    origin:
+      originsWhiteList.get(currentPath) || (isCredentialedRoute ? false : "*"),
   };
 
   callback(null, corsOptions);
